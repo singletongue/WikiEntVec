@@ -34,7 +34,7 @@ Pre-trained vectors are trained under the configurations below (see Manual train
 |`--negative` |`10`                   |
 |`--threads`  |`20`                   |
 |`--iter`     |`5`                    |
-|`--min_count`|`5`                    |
+|`--min_count`|`10`                   |
 |`--alpha`    |`0.025`                |
 
 
@@ -63,7 +63,7 @@ You can manually process Wikipedia dump file and train the CBOW or skip-gram mod
     Otherwise, the text will be tokenized by a simple rule based on regular expression.
 4. Train the model
     ```
-    $ python train.py path/to/corpus/file.txt.bz2 path/to/output/directory/ --size 100 --window 10 --mode sg --loss ns --sample 1e-3 --negative 10 --threads 20 --iter 5 --min_count 5 --alpha 0.025
+    $ python train.py path/to/corpus/file.txt.bz2 path/to/output/directory/ --size 100 --window 10 --mode sg --loss ns --sample 1e-3 --negative 10 --threads 20 --iter 5 --min_count 10 --alpha 0.025
     ```
 
     You can configure options below for training a model.
