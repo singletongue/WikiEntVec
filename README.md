@@ -24,6 +24,23 @@ For `entity_vectors.txt`, white spaces within names of NEs are replaced with und
 
 Pre-trained vectors are trained under the configurations below (see Manual training for details):
 
+### `generate_corpus.py`
+
+#### Japanese
+
+|Option       |Value  |
+|:------------|:------|
+|`--tokenizer`|`mecab`|
+
+#### English
+
+|Option       |Value      |
+|:------------|:----------|
+|`--tokenizer`|`regexp`   |
+|`--lower`    |(specified)|
+
+### `train.py`
+
 |Option       |Value                  |
 |:------------|:----------------------|
 |`--size`     |`100`, `200`, and `300`|
