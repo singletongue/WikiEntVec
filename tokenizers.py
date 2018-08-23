@@ -4,31 +4,39 @@ import re
 regex_entity = re.compile(r'<ENT>(.+?)</ENT>')
 
 class Tokenizer(object):
-    def __init__(self):
-        pass
+    def __init__(self, lower):
+        self._lower = lower
 
     def _tokenize(self, text):
         raise NotImplementedError
 
-    def tokenize(self, text, preserving_pattern=None):
+    def tokenize(self, text, preserving_pattern=None, lower=False):
         if preserving_pattern is None:
-            tokens = self._tokenize(text)
+            if self._lower:
+                tokens = [t.lower() for t in self._tokenize(text)]
+            else:
+                tokens = self._tokenize(text)
         else:
             tokens = []
-            matches = [match.group(0) for match
-                       in preserving_pattern.finditer(text)]
-            for (snippet, match) in zip(
-                    preserving_pattern.split(text), matches + [None]):
-                tokens += self._tokenize(snippet)
-                if match is not None:
-                    tokens.append(match)
+            matched_strings = [match.group(0) \
+                for match in preserving_pattern.finditer(text)]
+
+            for (snippet, matched_string) in zip(
+                    preserving_pattern.split(text), matched_strings + [None]):
+                if self._lower:
+                    tokens += [t.lower() for t in self._tokenize(snippet)]
+                else:
+                    tokens += self._tokenize(snippet)
+
+                if matched_string is not None:
+                    tokens.append(matched_string)
 
         return tokens
 
 
 class RegExpTokenizer(Tokenizer):
-    def __init__(self, pattern=r'\w+|\S'):
-        super(RegExpTokenizer, self).__init__()
+    def __init__(self, pattern=r'\w+|\S', lower=False):
+        super(RegExpTokenizer, self).__init__(lower)
         self._regex = re.compile(pattern)
 
     def _tokenize(self, text):
@@ -38,8 +46,8 @@ class RegExpTokenizer(Tokenizer):
 
 
 class NLTKTokenizer(Tokenizer):
-    def __init__(self):
-        super(NLTKTokenizer, self).__init__()
+    def __init__(self, lower=False):
+        super(NLTKTokenizer, self).__init__(lower)
         from nltk import word_tokenize
         self.word_tokenize = word_tokenize
 
@@ -48,8 +56,8 @@ class NLTKTokenizer(Tokenizer):
 
 
 class MeCabTokenizer(Tokenizer):
-    def __init__(self, dic=None, udic=None):
-        super(MeCabTokenizer, self).__init__()
+    def __init__(self, dic=None, udic=None, lower=False):
+        super(MeCabTokenizer, self).__init__(lower)
         import MeCab
         mecab_options = ['-O wakati']
         if dic:

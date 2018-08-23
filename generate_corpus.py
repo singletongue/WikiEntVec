@@ -28,6 +28,8 @@ def main():
     parser.add_argument('--tokenizer', choices=('regexp', 'nltk', 'mecab'),
                         default='regexp',
                         help='type of tokenizer [regexp]')
+    parser.add_argument('--lower', action='store_true',
+                        help='lowercase words (not applied to NEs)')
     parser.add_argument('--mecab_dic', type=str, default=None,
                         help='dictionary for MeCab tokenizer')
     parser.add_argument('--mecab_udic', type=str, default=None,
@@ -36,16 +38,16 @@ def main():
 
     if args.tokenizer == 'regexp':
         logging.info('tokenizer: RegExpTokenizer')
-        tokenizer = tokenizers.RegExpTokenizer()
+        tokenizer = tokenizers.RegExpTokenizer(lower=args.lower)
     elif args.tokenizer == 'nltk':
         logging.info('tokenizer: NLTKTokenizer')
-        tokenizer = tokenizers.NLTKTokenizer()
+        tokenizer = tokenizers.NLTKTokenizer(lower=args.lower)
     elif args.tokenizer == 'mecab':
         logging.info('tokenizer: MeCabTokenizer')
         logging.info(f'dictionary: {args.mecab_dic}')
         logging.info(f'user dictionary: {args.mecab_udic}')
         tokenizer = tokenizers.MeCabTokenizer(
-            dic=args.mecab_dic, udic=args.mecab_udic)
+            dic=args.mecab_dic, udic=args.mecab_udic, lower=args.lower)
     else:
         raise Exception('Undefined tokenizer type.')
 
