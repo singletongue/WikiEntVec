@@ -12,6 +12,8 @@ The vectors are trained with skip-gram algorithm using preprocessed Wikipedia te
 
 Pre-trained vectors are downloadable from the Releases page.
 
+Several old versions are available at [this site](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/).
+
 
 ## Specs
 
@@ -32,12 +34,12 @@ Pre-trained vectors are trained under the configurations below (see Manual train
 |:------------|:------|
 |`--tokenizer`|`mecab`|
 
-#### English
+<!-- #### English
 
 |Option       |Value      |
 |:------------|:----------|
 |`--tokenizer`|`regexp`   |
-|`--lower`    |(specified)|
+|`--lower`    |(specified)| -->
 
 ### `train.py`
 
