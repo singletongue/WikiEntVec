@@ -10,7 +10,7 @@ The vectors are trained with skip-gram algorithm using preprocessed Wikipedia te
 
 ## Downloads
 
-Pre-trained vectors are downloadable from the Releases page.
+Pre-trained vectors are downloadable from the [Releases](https://github.com/singletongue/WikiEntVec/releases) page.
 
 Several old versions are available at [this site](http://www.cl.ecei.tohoku.ac.jp/~m-suzuki/jawiki_vector/).
 
