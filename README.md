@@ -30,9 +30,12 @@ Pre-trained vectors are trained under the configurations below (see Manual train
 
 #### Japanese
 
+We used [mecab-ipadic-NEologd](https://github.com/neologd/mecab-ipadic-neologd) (v0.0.6) for tokenizing Japanese texts.
+
 |Option       |Value  |
 |:------------|:------|
 |`--tokenizer`|`mecab`|
+|`--mecab_dic`|path of the installed NEologd dictionary|
 
 <!-- #### English
 
@@ -51,7 +54,7 @@ Pre-trained vectors are trained under the configurations below (see Manual train
 |`--loss`     |`ns`                   |
 |`--sample`   |`1e-3`                 |
 |`--negative` |`10`                   |
-|`--threads`  |`20`                   |
+|`--threads`  |`12`                   |
 |`--iter`     |`5`                    |
 |`--min_count`|`10`                   |
 |`--alpha`    |`0.025`                |
