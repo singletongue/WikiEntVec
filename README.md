@@ -26,98 +26,88 @@ For `entity_vectors.txt`, white spaces within names of NEs are replaced with und
 
 Pre-trained vectors are trained under the configurations below (see Manual training for details):
 
-### `generate_corpus.py`
+### `make_corpus.py`
 
 #### Japanese
 
 We used [mecab-ipadic-NEologd](https://github.com/neologd/mecab-ipadic-neologd) (v0.0.6) for tokenizing Japanese texts.
 
-|Option       |Value  |
-|:------------|:------|
-|`--tokenizer`|`mecab`|
-|`--mecab_dic`|path of the installed NEologd dictionary|
-
-<!-- #### English
-
-|Option       |Value      |
-|:------------|:----------|
-|`--tokenizer`|`regexp`   |
-|`--lower`    |(specified)| -->
+|Option              |Value                                                 |
+|:-------------------|:-----------------------------------------------------|
+|`--cirrus_file`     |path to `jawiki-20190520-cirrussearch-content.json.gz`|
+|`--output_file`     |path to the output file                               |
+|`--tokenizer`       |`mecab`                                               |
+|`--tokenizer_option`|`-d <directory of mecab-ipadic-NEologd dictionary>`   |
 
 ### `train.py`
 
-|Option       |Value                  |
-|:------------|:----------------------|
-|`--size`     |`100`, `200`, and `300`|
-|`--window`   |`10`                   |
-|`--mode`     |`sg`                   |
-|`--loss`     |`ns`                   |
-|`--sample`   |`1e-3`                 |
-|`--negative` |`10`                   |
-|`--threads`  |`12`                   |
-|`--iter`     |`5`                    |
-|`--min_count`|`10`                   |
-|`--alpha`    |`0.025`                |
+|Option         |Value                                           |
+|:--------------|:-----------------------------------------------|
+|`--corpus_file`|path to a corpus file made with `make_corpus.py`|
+|`--output_dir` |path to the output directory                    |
+|`--embed_size` |`100`, `200`, or `300`                          |
+|`--window_size`|`10`                                            |
+|`--sample_size`|`10`                                            |
+|`--min_count`  |`10`                                            |
+|`--epoch`      |`5`                                             |
+|`--workers`    |`20`                                            |
 
 
 ## Manual training
 
-You can manually process Wikipedia dump file and train the CBOW or skip-gram model on the preprocessed file.
+You can manually process Wikipedia dump file and train a skip-gram model on the preprocessed file.
 
 
 ### Requirements
 
 - Python 3.6
 - gensim
-- MeCab and its Python binding (mecab-python3) (optional: required for tokenizing text in Japanese)
+- logzero
+- MeCab and its Python binding (mecab-python3) (optional: required for tokenizing Japanese texts)
 
 
 ### Steps
 
 1. Download Wikipedia Cirrussearch dump file from [here](https://dumps.wikimedia.org/other/cirrussearch/).
-    - Make sure to choose a file with a name like `**wiki-YYYYMMDD-cirrussearch-content.json.gz`.
+    - Make sure to choose a file named like `**wiki-YYYYMMDD-cirrussearch-content.json.gz`.
 2. Clone this repository.
 3. Preprocess the downloaded dump file.
     ```
-    $ python generate_corpus.py path/to/dump/file.json.gz path/to/output/corpus/file.txt.bz2
+    $ python make_corpus.py --cirrus_file <dump file> --output_file <corpus file>
     ```
     If you're processing Japanese version of Wikipedia, make sure to use MeCab tokenizer by setting `--tokenizer mecab` option.
     Otherwise, the text will be tokenized by a simple rule based on regular expression.
 4. Train the model
     ```
-    $ python train.py path/to/corpus/file.txt.bz2 path/to/output/directory/ --size 100 --window 10 --mode sg --loss ns --sample 1e-3 --negative 10 --threads 20 --iter 5 --min_count 10 --alpha 0.025
+    $ python train.py --corpus_file <corpus file> --output_dir <output directory>
     ```
 
     You can configure options below for training a model.
 
     ```
-    usage: train.py [-h] [--size SIZE] [--window WINDOW] [--mode {cbow,sg}]
-                    [--loss {ns,hs}] [--sample SAMPLE] [--negative NEGATIVE]
-                    [--threads THREADS] [--iter ITER] [--min_count MIN_COUNT]
-                    [--alpha ALPHA]
-                    corpus_file out_dir
-
-    positional arguments:
-    corpus_file           corpus file
-    out_dir               output directory to store embedding files
+    usage: train.py [-h] --corpus_file CORPUS_FILE --output_dir OUTPUT_DIR
+                    [--embed_size EMBED_SIZE] [--window_size WINDOW_SIZE]
+                    [--sample_size SAMPLE_SIZE] [--min_count MIN_COUNT]
+                    [--epoch EPOCH] [--workers WORKERS]
 
     optional arguments:
-    -h, --help            show this help message and exit
-    --size SIZE           size of word vectors [100]
-    --window WINDOW       maximum window size [5]
-    --mode {cbow,sg}      training algorithm: "cbow" (continuous bag of words)
-                          or "sg" (skip-gram) [cbow]
-    --loss {ns,hs}        loss function: "ns" (negative sampling) or "hs"
-                          (hierarchical softmax) [ns]
-    --sample SAMPLE       threshold of frequency of words to be down-sampled
-                          [1e-3]
-    --negative NEGATIVE   number of negative examples [5]
-    --threads THREADS     number of worker threads to use for training [2]
-    --iter ITER           number of iterations in training [5]
-    --min_count MIN_COUNT
-                          discard all words with total frequency lower than this
-                          [5]
-    --alpha ALPHA         initial learning rate [0.025]
+      -h, --help            show this help message and exit
+      --corpus_file CORPUS_FILE
+                            Corpus file (.txt)
+      --output_dir OUTPUT_DIR
+                            Output directory to save embedding files
+      --embed_size EMBED_SIZE
+                            Dimensionality of the word/entity vectors [100]
+      --window_size WINDOW_SIZE
+                            Maximum distance between the current and predicted
+                            word within a sentence [5]
+      --sample_size SAMPLE_SIZE
+                            Number of negative samples [5]
+      --min_count MIN_COUNT
+                            Ignores all words/entities with total frequency lower
+                            than this [5]
+      --epoch EPOCH         number of training epochs [5]
+      --workers WORKERS     Use these many worker threads to train the model [2]
     ```
 
 
