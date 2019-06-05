@@ -134,11 +134,11 @@ First, we extracted all hyperlinks (pairs of anchor text and the linked article)
 
 Next, for each hyperlink, we replaced the appearances of anchor text in the article body with special tokens representing the linked articles.
 
-For instance, if an article has a hyperlink to "Mercury (planet)" assigned to the anchor text "Mercury", we replace all the other appearances of "Mercury" in the same article with the special token `[Mercury_(planet)]`.
+For instance, if an article has a hyperlink to "Mercury (planet)" assigned to the anchor text "Mercury", we replace all the other appearances of "Mercury" in the same article with the special token `##Mercury_(planet)##`.
 
 Note that the diversity of NE mentions is resolved by replacing possibly diverse anchor texts with special tokens which are unique to NEs.
 Moreover, the ambiguity of NE mentions is also addressed by making "one sense per discourse" assumption; we assume that NEs mentioned by possibly ambiguous phrases can be determined by the context or the document.
-With this assumption, the phrases "Mercury" in the above example are neither replaced with `[Mercury_(element)]` nor `[Freddie_Mercury]`, since the article does not have such mentions as hyperlinks.
+With this assumption, the phrases "Mercury" in the above example are neither replaced with `##Mercury_(element)##` nor `##Freddie_Mercury##`, since the article does not have such mentions as hyperlinks.
 
 We used the preprocessed Wikipedia articles as the corpus and applied skip-gram algorithm to learn distributed representations of words and NEs.
 This means that words and NEs are mapped to the same vector space.
