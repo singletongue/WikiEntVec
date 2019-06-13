@@ -22,7 +22,7 @@ These files are text files in word2vec output format, in which the first line de
 
 `word_vectors.txt` and `entity_vectors.txt` contains vectors for words and NEs, respectively.
 For `entity_vectors.txt`, white spaces within names of NEs are replaced with underscores like `United_States`.
-`all_vectors.txt` contains vectors of both words and embeddings in one file, where each NE token is formatted with square brackets like `[United_States]`
+`all_vectors.txt` contains vectors of both words and embeddings in one file, where each NE token is formatted with square brackets like `##United_States##`
 
 Pre-trained vectors are trained under the configurations below (see Manual training for details):
 
