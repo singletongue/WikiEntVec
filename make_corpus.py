@@ -43,7 +43,7 @@ def main(args):
                     continue
 
                 dst_title = json_item['title']
-                redirects[dst_title] == dst_title
+                redirects[dst_title] = dst_title
                 for redirect_item in json_item['redirect']:
                     if redirect_item['namespace'] == 0:
                         src_title = redirect_item['title']
