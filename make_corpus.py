@@ -10,7 +10,8 @@ from tokenization import RegExpTokenizer, NLTKTokenizer, MeCabTokenizer
 
 
 regex_spaces = re.compile(r'\s+')
-regex_hyperlink = re.compile(r'\[\[([^:]+?)\]\]')
+regex_title_paren = re.compile(r' \([^()].+?\)$')
+regex_hyperlink = re.compile(r'\[\[(.+?)\]\]')
 regex_entity = re.compile(r'##[^#]+?##')
 
 
@@ -62,7 +63,8 @@ def main(args):
             text = regex_spaces.sub(' ', json_item['text'])
 
             hyperlinks = dict()
-            hyperlinks[title] = title
+            title_without_paren = regex_title_paren.sub('', title)
+            hyperlinks.setdefault(title_without_paren, title)
             for match in regex_hyperlink.finditer(json_item['source_text']):
                 if '|' in match.group(1):
                     (entity, anchor) = match.group(1).split('|', maxsplit=1)
