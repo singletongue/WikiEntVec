@@ -29,6 +29,26 @@ def main(args):
     else:
         raise RuntimeError(f'Invalid tokenizer: {args.tokenizer}')
 
+
+    redirects = dict()
+    if args.do_resolve_redirects:
+        logger.info('loading redirect information')
+        with gzip.open(args.cirrus_file, 'rt') as fi:
+            for line in fi:
+                json_item = json.loads(line)
+                if 'title' not in json_item:
+                    continue
+
+                if 'redirect' not in json_item:
+                    continue
+
+                dst_title = json_item['title']
+                redirects[dst_title] == dst_title
+                for redirect_item in json_item['redirect']:
+                    if redirect_item['namespace'] == 0:
+                        src_title = redirect_item['title']
+                        redirects.setdefault(src_title, dst_title)
+
     logger.info('generating corpus for training')
     n_processed = 0
     with gzip.open(args.cirrus_file, 'rt') as fi, \
@@ -54,6 +74,10 @@ def main(args):
 
                 anchor = anchor.strip()
                 entity = entity.strip()
+
+                if args.do_resolve_redirects:
+                    entity = redirects.get(entity, '')
+
                 if len(anchor) > 0 and len(entity) > 0:
                     hyperlinks.setdefault(anchor, entity)
 
@@ -103,6 +127,8 @@ if __name__ == "__main__":
         help='tokenizer type [regexp]')
     parser.add_argument('--do_lower_case', action='store_true',
         help='lowercase words (not applied to NEs)')
+    parser.add_argument('--do_resolve_redirects', action='store_true',
+        help='resolve redirects of entity names')
     parser.add_argument('--tokenizer_option', type=str, default='',
         help='option string passed to the tokenizer')
     args = parser.parse_args()
